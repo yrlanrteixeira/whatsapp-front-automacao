@@ -8,7 +8,6 @@ import CreateMultipleGroupsForm from "./components/Forms/CreateMultipleGroupsFor
 import SendMessageAndPollForm from "./components/Forms/SendMessageAndPollForm";
 import SendPollForm from "./components/Forms/SendPollForm";
 import { GlobalStyle, theme } from "./styles/GlobalStyle";
-import "dotenv/config";
 
 const App: React.FC = () => (
   <ThemeProvider theme={theme}>
