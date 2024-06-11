@@ -10,9 +10,11 @@ import {
   FormButton,
 } from "../styles";
 import { SendPollFormData } from "@global/interface/interface-forms";
+import useConnectionStatus from "@hooks/useConnectionStatus";
 
 const SendPollForm: React.FC = () => {
   const [form] = Form.useForm();
+  const connected = useConnectionStatus();
 
   const handleSubmit = async (values: unknown) => {
     const data = values as SendPollFormData;
@@ -99,7 +101,11 @@ const SendPollForm: React.FC = () => {
         <StyledRow gutter={16}>
           <StyledCol span={24}>
             <StyledItem>
-              <FormButton type="primary" htmlType="submit">
+              <FormButton
+                type="primary"
+                htmlType="submit"
+                disabled={!connected}
+              >
                 Enviar Enquete
               </FormButton>
             </StyledItem>
