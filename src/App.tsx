@@ -24,22 +24,24 @@ const GlobalStyle = createGlobalStyle`
   }
 
   code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',;
   }
 `;
 
-const App: React.FC = () => (
-  <ThemeProvider theme={THEME_DEFAULT}>
-    <GlobalStyle />
-    <Router>
-      <AppContainer>
-        <Sidebar />
-        <Content>
-          <AppRoutes />
-        </Content>
-      </AppContainer>
-    </Router>
-  </ThemeProvider>
-);
+const App: React.FC = () => {
+  return (
+    <ThemeProvider theme={THEME_DEFAULT}>
+      <GlobalStyle />
+      <Router>
+        <AppContainer>
+          <Sidebar />
+          <Content>
+            <AppRoutes />
+          </Content>
+        </AppContainer>
+      </Router>
+    </ThemeProvider>
+  );
+};
 
 export default App;

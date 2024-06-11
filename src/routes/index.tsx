@@ -6,7 +6,7 @@ import QRCodeDisplay from "../components/QRCode/QRCodeDisplay";
 
 import ConnectionChecker from "../components/ConnectionChecker/ConnectionChecker";
 import SendMessageAndPollForm from "../components/Forms/SendMessageAndPollForm/SendMessageAndPollForm";
-import SendMessageForm from "../components/Forms/SendMessaForm/SendMessageForm";
+import SendMessageForm from "@components/Forms/SendMessageForm/SendMessageForm";
 import SendPollForm from "../components/Forms/SendPollForm/SendPollForm";
 
 const AppRoutes = () => (

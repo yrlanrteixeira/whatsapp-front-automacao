@@ -21,8 +21,14 @@ const CreateGroupForm: React.FC = () => {
     try {
       const response = await api.post("/createGroup", {
         ...data,
-        names: data.names.join(","),
-        admins: data.admins?.join(","),
+        names: data.names
+          .toString()
+          .split(",")
+          .map((name) => name.trim()),
+        admins: data.admins
+          ?.toString()
+          .split(",")
+          .map((admin) => admin.trim()),
       });
       message.success(response.data.status);
     } catch (error) {
