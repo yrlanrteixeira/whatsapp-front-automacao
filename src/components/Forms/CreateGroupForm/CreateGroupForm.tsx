@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Checkbox, Form, Input, message } from "antd";
-import api from "../../services/api";
+import api from "../../../services/api";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -18,6 +18,23 @@ const CreateGroupForm: React.FC = () => {
   const [description, setDescription] = useState("");
   const [admins, setAdmins] = useState("");
   const [setInfoAdminsOnly, setSetInfoAdminsOnly] = useState(false);
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const response = await api.get("/connectionStatus");
+        setConnected(response.data.connected);
+      } catch (error) {
+        message.error("Failed to check connection status");
+      }
+    };
+
+    checkConnection();
+    const interval = setInterval(checkConnection, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSubmit = async () => {
     try {
@@ -74,7 +91,7 @@ const CreateGroupForm: React.FC = () => {
           </Checkbox>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={!connected}>
             Criar Grupo
           </Button>
         </Form.Item>

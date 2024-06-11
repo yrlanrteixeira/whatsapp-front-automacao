@@ -1,32 +1,43 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./routes";
 import { ThemeProvider } from "styled-components";
-import Navbar from "./components/Navbar/Navbar";
-import CreateGroupForm from "./components/Forms/CreateGroupForm";
-import SendMessageForm from "./components/Forms/SendMessageForm";
-import CreateMultipleGroupsForm from "./components/Forms/CreateMultipleGroupsForm";
-import SendMessageAndPollForm from "./components/Forms/SendMessageAndPollForm";
-import SendPollForm from "./components/Forms/SendPollForm";
-import { GlobalStyle, theme } from "./styles/GlobalStyle";
+import { THEME_DEFAULT } from "./styles/THEME";
+import styled, { createGlobalStyle } from "styled-components";
+import Sidebar from "./components/Sidebar/Sidebar";
+
+const AppContainer = styled.div`
+  display: flex;
+`;
+
+const Content = styled.div`
+  flex: 1;
+  padding: 20px;
+`;
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+    background: ${(props) => props.theme.COLORS.NEUTRAL_COLORS.WHITE};
+    font-family: ${(props) => props.theme.FONTS.MAIN};
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+`;
 
 const App: React.FC = () => (
-  <ThemeProvider theme={theme}>
+  <ThemeProvider theme={THEME_DEFAULT}>
     <GlobalStyle />
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/create-group" element={<CreateGroupForm />} />
-        <Route
-          path="/create-multiple-groups"
-          element={<CreateMultipleGroupsForm />}
-        />
-        <Route path="/send-message" element={<SendMessageForm />} />
-        <Route
-          path="/send-message-and-poll"
-          element={<SendMessageAndPollForm />}
-        />
-        <Route path="/send-poll" element={<SendPollForm />} />
-      </Routes>
+      <AppContainer>
+        <Sidebar />
+        <Content>
+          <AppRoutes />
+        </Content>
+      </AppContainer>
     </Router>
   </ThemeProvider>
 );

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, message } from "antd";
-import api from "../../services/api";
+
 import styled from "styled-components";
+import api from "../../../services/api";
 
 const Container = styled.div`
   max-width: 600px;
@@ -12,25 +13,23 @@ const Container = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
-const SendMessageAndPollForm: React.FC = () => {
+const SendPollForm: React.FC = () => {
   const [names, setNames] = useState("");
-  const [messageContent, setMessageContent] = useState("");
   const [pollQuestion, setPollQuestion] = useState("");
   const [pollOptions, setPollOptions] = useState("");
   const [allowMultipleAnswers, setAllowMultipleAnswers] = useState(false);
 
   const handleSubmit = async () => {
     try {
-      const response = await api.post("/sendMessageAndPoll", {
+      const response = await api.post("/sendPoll", {
         names: names.split(","),
-        message: messageContent,
         pollQuestion,
         pollOptions: pollOptions.split(","),
         allowMultipleAnswers,
       });
       message.success(response.data.status);
     } catch (error) {
-      message.error("Failed to send message and poll");
+      message.error("Failed to send poll");
     }
   };
 
@@ -42,13 +41,6 @@ const SendMessageAndPollForm: React.FC = () => {
             value={names}
             onChange={(e) => setNames(e.target.value)}
             placeholder="Fulano, Ciclano"
-          />
-        </Form.Item>
-        <Form.Item label="Mensagem" required>
-          <Input.TextArea
-            value={messageContent}
-            onChange={(e) => setMessageContent(e.target.value)}
-            placeholder="Digite sua mensagem aqui..."
           />
         </Form.Item>
         <Form.Item label="Pergunta da enquete" required>
@@ -78,7 +70,7 @@ const SendMessageAndPollForm: React.FC = () => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Enviar Mensagem e Enquete
+            Enviar Enquete
           </Button>
         </Form.Item>
       </Form>
@@ -86,4 +78,4 @@ const SendMessageAndPollForm: React.FC = () => {
   );
 };
 
-export default SendMessageAndPollForm;
+export default SendPollForm;
