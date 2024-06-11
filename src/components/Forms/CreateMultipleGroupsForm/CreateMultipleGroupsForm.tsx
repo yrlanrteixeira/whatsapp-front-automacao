@@ -1,119 +1,149 @@
-import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Form, Input, message } from "antd";
-import api from "../../../services/api";
-import styled from "styled-components";
-
-const Container = styled.div`
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`;
+import { Checkbox, message, Form, Input } from "antd";
+import api from "@services/api";
+import {
+  Container,
+  FormContainer,
+  StyledItem,
+  StyledRow,
+  StyledCol,
+  FormButton,
+} from "../styles";
+import { CreateMultipleGroupsFormData } from "@global/interface/interface-forms";
+import useConnectionStatus from "@hooks/useConnectionStatus";
 
 const CreateMultipleGroupsForm: React.FC = () => {
-  const [groupNames, setGroupNames] = useState("");
-  const [names, setNames] = useState("");
-  const [minInterval, setMinInterval] = useState(1000);
-  const [maxInterval, setMaxInterval] = useState(5000);
-  const [description, setDescription] = useState("");
-  const [admins, setAdmins] = useState("");
-  const [setInfoAdminsOnly, setSetInfoAdminsOnly] = useState(false);
-  const [connected, setConnected] = useState(false);
+  const [form] = Form.useForm();
+  const connected = useConnectionStatus();
 
-  useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        const response = await api.get("/connectionStatus");
-        setConnected(response.data.connected);
-      } catch (error) {
-        message.error("Failed to check connection status");
-      }
-    };
-
-    checkConnection();
-    const interval = setInterval(checkConnection, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: unknown) => {
+    const data = values as CreateMultipleGroupsFormData;
     try {
-      const response = await api.post("/createMultipleGroups", {
-        groupNames: groupNames.split(","),
-        names: names.split(","),
-        minInterval,
-        maxInterval,
-        description,
-        admins: admins.split(","),
-        setInfoAdminsOnly,
+      await api.post("/createMultipleGroups", {
+        ...data,
+        groupNames: data.groupNames.join(","),
+        names: data.names.join(","),
+        admins: data.admins?.join(","),
       });
-      message.success(response.data.status);
+      message.success("Grupos criados com sucesso!");
     } catch (error) {
-      message.error("Failed to create groups");
+      message.error("Falha ao criar grupos");
     }
   };
 
   return (
     <Container>
-      <Form layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="Nome dos grupos (separados por vírgula)" required>
-          <Input
-            value={groupNames}
-            onChange={(e) => setGroupNames(e.target.value)}
-            placeholder="Grupo 1, Grupo 2, Grupo 3"
-          />
-        </Form.Item>
-        <Form.Item label="Participantes (separados por vírgula)" required>
-          <Input
-            value={names}
-            onChange={(e) => setNames(e.target.value)}
-            placeholder="Fulano, Ciclano"
-          />
-        </Form.Item>
-        <Form.Item label="Intervalo mínimo (ms)" required>
-          <Input
-            value={minInterval}
-            type="number"
-            onChange={(e) => setMinInterval(Number(e.target.value))}
-          />
-        </Form.Item>
-        <Form.Item label="Intervalo máximo(ms)" required>
-          <Input
-            value={maxInterval}
-            type="number"
-            onChange={(e) => setMaxInterval(Number(e.target.value))}
-          />
-        </Form.Item>
-        <Form.Item label="Descrição do grupo">
-          <Input.TextArea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Digite a descrição do grupo aqui..."
-          />
-        </Form.Item>
-        <Form.Item label="Admins (separados por vírgula)">
-          <Input
-            value={admins}
-            onChange={(e) => setAdmins(e.target.value)}
-            placeholder="Admin1, Admin2"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Checkbox
-            checked={setInfoAdminsOnly}
-            onChange={(e) => setSetInfoAdminsOnly(e.target.checked)}
-          >
-            Somente admins podem ver editar informações do grupo
-          </Checkbox>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={!connected}>
-            Criar múltiplos grupos
-          </Button>
-        </Form.Item>
-      </Form>
+      <FormContainer
+        layout="vertical"
+        onFinish={handleSubmit}
+        form={form}
+        initialValues={{ minInterval: 1000, maxInterval: 5000 }}
+        style={{ width: "100vw", maxWidth: "600px" }}
+      >
+        <StyledRow gutter={16}>
+          <StyledCol span={24}>
+            <StyledItem
+              label="Nome dos grupos (separados por vírgula)"
+              name="groupNames"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, insira os nomes dos grupos",
+                },
+              ]}
+            >
+              <Input placeholder="Grupo 1, Grupo 2, Grupo 3" />
+            </StyledItem>
+          </StyledCol>
+        </StyledRow>
+
+        <StyledRow gutter={16}>
+          <StyledCol span={24}>
+            <StyledItem
+              label="Participantes (separados por vírgula)"
+              name="names"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, insira os nomes dos participantes",
+                },
+              ]}
+            >
+              <Input placeholder="Fulano, Ciclano" />
+            </StyledItem>
+          </StyledCol>
+        </StyledRow>
+
+        <StyledRow gutter={16}>
+          <StyledCol span={12}>
+            <StyledItem
+              label="Intervalo mínimo (ms)"
+              name="minInterval"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, insira o intervalo mínimo",
+                },
+              ]}
+            >
+              <Input type="number" />
+            </StyledItem>
+          </StyledCol>
+          <StyledCol span={12}>
+            <StyledItem
+              label="Intervalo máximo (ms)"
+              name="maxInterval"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, insira o intervalo máximo",
+                },
+              ]}
+            >
+              <Input type="number" />
+            </StyledItem>
+          </StyledCol>
+        </StyledRow>
+
+        <StyledRow gutter={16}>
+          <StyledCol span={24}>
+            <StyledItem label="Descrição do grupo" name="description">
+              <Input.TextArea placeholder="Digite a descrição do grupo aqui..." />
+            </StyledItem>
+          </StyledCol>
+        </StyledRow>
+
+        <StyledRow gutter={16}>
+          <StyledCol span={24}>
+            <StyledItem label="Admins (separados por vírgula)" name="admins">
+              <Input placeholder="Admin1, Admin2" />
+            </StyledItem>
+          </StyledCol>
+        </StyledRow>
+
+        <StyledRow gutter={16}>
+          <StyledCol span={24}>
+            <StyledItem name="setInfoAdminsOnly" valuePropName="checked">
+              <Checkbox>
+                Somente admins podem ver e editar informações do grupo
+              </Checkbox>
+            </StyledItem>
+          </StyledCol>
+        </StyledRow>
+
+        <StyledRow gutter={16}>
+          <StyledCol span={24}>
+            <StyledItem>
+              <FormButton
+                type="primary"
+                htmlType="submit"
+                disabled={!connected}
+              >
+                Criar múltiplos grupos
+              </FormButton>
+            </StyledItem>
+          </StyledCol>
+        </StyledRow>
+      </FormContainer>
     </Container>
   );
 };
