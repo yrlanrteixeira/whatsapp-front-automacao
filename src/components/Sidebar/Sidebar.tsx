@@ -65,6 +65,11 @@ const Sidebar: React.FC = () => {
       key: "/historic",
       icon: <HistoryOutlined />,
     },
+    {
+      label: <Link to="/pre-escala">Pré-Escala</Link>,
+      key: "/pre-escala",
+      icon: <TeamOutlined />,
+    },
   ];
 
   return (
