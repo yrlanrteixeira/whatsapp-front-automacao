@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { Button, Input, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import axios from "axios";
 import { StyTable, StyTableSpan } from "./styles";
 import { InputAntdSimple } from "@components/InputsCustom";
-import { StyLabel } from "@components/InputsCustom/styles";
 import { StyledCol, StyledRow } from "@components/Forms/styles";
 
 export interface GroupData {
@@ -28,15 +26,7 @@ const EditableCell: React.FC<{
   dataIndex: string;
   record: GroupData;
   handleSave: (record: GroupData) => void;
-}> = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
+}> = ({ editable, children, dataIndex, record, handleSave, ...restProps }) => {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(children as string);
 
@@ -130,15 +120,6 @@ const UploadGroupData: React.FC<{
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
     setDataSource(newData);
-  };
-
-  const handleSend = async () => {
-    try {
-      await axios.post("/process-group-data", { data: dataSource });
-      message.success("Dados enviados com sucesso!");
-    } catch (error) {
-      message.error("Falha ao enviar dados");
-    }
   };
 
   const columns = [
