@@ -4,8 +4,8 @@ import { Row, Col, Button as AntButton, Form } from "antd";
 const { Item } = Form;
 
 export const Container = styled.div`
-  max-width: 600px;
-  margin: auto;
+  max-width: 100vw;
+  margin-left: 120px;
   padding: 20px;
   background: #fff;
   border-radius: 8px;
