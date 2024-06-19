@@ -32,6 +32,6 @@ export interface SendMessageAndPollFormData {
 export interface SendPollFormData {
   names: string[];
   pollQuestion: string;
-  pollOptions: string[];
+  pollOptions: string;
   allowMultipleAnswers: boolean;
 }

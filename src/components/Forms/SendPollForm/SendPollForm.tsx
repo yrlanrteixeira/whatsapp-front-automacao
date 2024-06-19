@@ -25,7 +25,7 @@ const SendPollForm: React.FC = () => {
           .split(",")
           .map((name) => name.trim()),
         pollQuestion: data.pollQuestion,
-        pollOptions: data.pollOptions.join(","),
+        pollOptions: data.pollOptions.split(",").map((option) => option.trim()),
         allowMultipleAnswers: data.allowMultipleAnswers,
       });
       message.success("Enquete enviada com sucesso!");
