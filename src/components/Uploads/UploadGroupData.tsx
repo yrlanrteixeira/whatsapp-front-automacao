@@ -71,7 +71,6 @@ const UploadGroupData: React.FC<{
 }> = ({ onUploadSuccess }) => {
   const [file, setFile] = useState<File | null>(null);
   const [dataSource, setDataSource] = useState<GroupData[]>([]);
-  const [count, setCount] = useState(0);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -105,7 +104,6 @@ const UploadGroupData: React.FC<{
               mensagem4: row["Mensagem 4"] || "",
             }));
           setDataSource(data);
-          setCount(data.length);
           onUploadSuccess(data);
         } else {
           message.error("Planilha 'Grupos' não encontrada.");
@@ -170,7 +168,7 @@ const UploadGroupData: React.FC<{
     },
   ];
 
-  const mergedColumns = columns.map((col) => {
+  const mergedColumns: any = columns.map((col) => {
     if (!col.editable) {
       return col;
     }
