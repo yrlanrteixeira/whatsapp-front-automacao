@@ -18,6 +18,7 @@ const SendPollForm: React.FC = () => {
 
   const handleSubmit = async (values: unknown) => {
     const data = values as SendPollFormData;
+    const pollOptions = data.pollOptions.toString();
     try {
       await api.post("/sendPoll", {
         names: data.names
@@ -25,6 +26,7 @@ const SendPollForm: React.FC = () => {
           .split(",")
           .map((name) => name.trim()),
         pollQuestion: data.pollQuestion,
+        pollOptions: pollOptions.split(",").map((option) => option.trim()),
         pollOptions: data.pollOptions.split(",").map((option) => option.trim()),
         allowMultipleAnswers: data.allowMultipleAnswers,
       });

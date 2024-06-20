@@ -17,6 +17,7 @@ const SendMessageAndPollForm: React.FC = () => {
 
   const handleSubmit = async (values: unknown) => {
     const data = values as SendMessageAndPollFormData;
+    const pollOptions = data.pollOptions.toString();
     try {
       await api.post("/sendMessageAndPoll", {
         names: data.names
@@ -25,11 +26,13 @@ const SendMessageAndPollForm: React.FC = () => {
           .map((name) => name.trim()),
         message: data.message,
         pollQuestion: data.pollQuestion,
-        pollOptions: data.pollOptions.join(","),
+        pollOptions: pollOptions.split(",").map((option) => option.trim()),
         allowMultipleAnswers: data.allowMultipleAnswers,
       });
+      console.log(data);
       message.success("Mensagem e enquete enviadas com sucesso!");
     } catch (error) {
+      console.log(data);
       message.error("Falha ao enviar mensagem e enquete");
     }
   };
