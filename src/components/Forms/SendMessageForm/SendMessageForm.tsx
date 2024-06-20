@@ -39,7 +39,12 @@ const SendMessageForm: React.FC = () => {
         layout="vertical"
         onFinish={handleSubmit}
         form={form}
-        style={{ width: "100vw", maxWidth: "600px" }}
+        style={{
+          width: "100vw",
+          maxWidth: "1000px",
+          alignSelf: "center",
+          margin: "0 auto",
+        }}
       >
         <StyledRow gutter={16}>
           <StyledCol span={24}>
