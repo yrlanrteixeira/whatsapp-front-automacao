@@ -91,7 +91,7 @@ const UploadGroupData: React.FC<{
         if (worksheet) {
           const data: GroupData[] = XLSX.utils
             .sheet_to_json(worksheet)
-            .map((row: any, index) => ({
+            .map((row: any, index: number) => ({
               key: `${index}`,
               pessoa: row["Pessoa"] || "",
               descricao: row["Descrição"] || "",
