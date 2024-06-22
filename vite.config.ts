@@ -7,6 +7,7 @@ dotenv.config();
 
 export default defineConfig({
   plugins: [react()],
+  build: { chunkSizeWarningLimit: 1600 },
   define: {
     "process.env": process.env,
   },
