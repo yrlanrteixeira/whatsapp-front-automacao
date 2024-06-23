@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { Button, Input, Form, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { StyTable, StyTableSpan } from "./styles";
@@ -79,36 +79,50 @@ const UploadGroupData: React.FC<{
     }
   };
 
-  const handleFileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (file) {
+      const workbook = new ExcelJS.Workbook();
       const reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-      reader.onload = (e) => {
-        const bufferArray = e.target?.result;
-        const workbook = XLSX.read(bufferArray, { type: "buffer" });
-        const worksheet = workbook.Sheets["Grupos"];
-        if (worksheet) {
-          const data: GroupData[] = XLSX.utils
-            .sheet_to_json(worksheet)
-            .map((row: any, index: number) => ({
-              key: `${index}`,
-              pessoa: row["Pessoa"] || "",
-              descricao: row["Descrição"] || "",
-              evento: row["Evento"] || "",
-              respoGET: row["ResponGET"] || "",
-              planejador: row["Planejador"] || "",
-              mensagem1: row["Mensagem 1"] || "",
-              mensagem2: row["Mensagem 2"] || "",
-              mensagem3: row["Mensagem 3"] || "",
-              mensagem4: row["Mensagem 4"] || "",
-            }));
-          setDataSource(data);
-          onUploadSuccess(data);
-        } else {
-          message.error("Planilha 'Grupos' não encontrada.");
+
+      reader.onload = async (e) => {
+        const arrayBuffer = e.target?.result as ArrayBuffer;
+        try {
+          await workbook.xlsx.load(arrayBuffer);
+
+          const worksheet = workbook.getWorksheet("Grupos");
+          if (worksheet) {
+            const data: GroupData[] = [];
+            worksheet.eachRow((row, rowNumber) => {
+              if (rowNumber > 1) {
+                const groupData: GroupData = {
+                  key: `${rowNumber - 2}`,
+                  pessoa: row.getCell(1).text || "",
+                  descricao: row.getCell(2).text || "",
+                  evento: row.getCell(3).text || "",
+                  respoGET: row.getCell(4).text || "",
+                  planejador: row.getCell(5).text || "",
+                  mensagem1: row.getCell(6).text || "",
+                  mensagem2: row.getCell(7).text || "",
+                  mensagem3: row.getCell(8).text || "",
+                  mensagem4: row.getCell(9).text || "",
+                };
+                data.push(groupData);
+              }
+            });
+
+            setDataSource(data);
+            onUploadSuccess(data);
+          } else {
+            message.error("Planilha 'Grupos' não encontrada.");
+          }
+        } catch (error) {
+          message.error("Erro ao carregar o arquivo Excel.");
+          console.error(error);
         }
       };
+
+      reader.readAsArrayBuffer(file);
     }
   };
 
